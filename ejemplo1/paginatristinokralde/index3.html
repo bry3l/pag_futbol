@@ -21,17 +21,46 @@
     .skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 10; }
     .skip-link:focus { top: 1rem; }
     :focus-visible { outline: 3px solid #ffd166; outline-offset: 3px; }
-    /* Tailwind version: editorial composition led by image and long-form content. */
-    @media (min-width: 768px) {
-      #contenido > section:first-child > .mx-auto { grid-template-columns: 1fr 1fr; }
-      #contenido > section:first-child .hero-image { order: -1; }
-      #biografia > .mx-auto { grid-template-columns: 1.25fr .75fr; }
-      #trayectoria .mt-16 { grid-template-columns: 1fr; }
-      #trayectoria .mt-16 > div:first-child { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid rgba(255,255,255,.25); }
-      #trayectoria .mt-16 > div:first-child .timeline-step { border-left: 0; border-bottom: 3px solid transparent; }
-      #trayectoria .mt-16 > div:first-child .timeline-step:hover, #trayectoria .mt-16 > div:first-child .timeline-step:focus-visible, #trayectoria .mt-16 > div:first-child .timeline-step.is-active { border-bottom-color: #f2b84b; }
-    }
-    @media (max-width: 767px) { .hero-image { min-height: 22rem; } .hero-image::after { padding-top: 10rem; font-size: 11rem; } }
+    body { background: #101a35; }
+    main { overflow: hidden; }
+    header { background: rgba(16, 26, 53, .66) !important; backdrop-filter: blur(16px); }
+    #contenido > section:first-child { isolation: isolate; background: linear-gradient(135deg, #123b72, #2f7d5a 52%, #514982); }
+    #contenido > section:first-child::before, #contenido > section:first-child::after { position: absolute; border-radius: 9999px; content: ''; filter: blur(8px); opacity: .36; pointer-events: none; }
+    #contenido > section:first-child::before { width: 22rem; height: 22rem; left: 8%; top: 18%; background: #f2b84b; animation: drift 11s ease-in-out infinite alternate; }
+    #contenido > section:first-child::after { width: 28rem; height: 28rem; right: -8rem; bottom: -10rem; background: #7060c4; animation: drift 14s ease-in-out infinite alternate-reverse; }
+    #contenido > section:first-child .hero-image { z-index: -1; }
+    #contenido > section:first-child .flex.min-h-\[38rem\] { z-index: 1; }
+    #contenido > section:first-child .inline-flex { box-shadow: 0 1rem 2rem rgba(4, 12, 35, .25); }
+    #biografia, #trayectoria, #estadisticas, #galeria { position: relative; }
+    #biografia::after, #trayectoria::after, #estadisticas::after, #galeria::after { position: absolute; width: 6rem; height: 6rem; right: 8%; top: 12%; border: 1px solid currentColor; border-radius: 9999px; opacity: .15; content: ''; }
+    .stat, .gallery-img, .timeline-step { transition: transform .35s ease, box-shadow .35s ease, background-color .35s ease; }
+    .stat:hover { transform: translateY(-8px); box-shadow: 0 1rem 2rem rgba(4, 12, 35, .2); }
+    .timeline-step:hover, .timeline-step:focus-visible, .timeline-step.is-active { transform: translateX(8px); }
+    .gallery-img:hover { box-shadow: 0 1.25rem 2rem rgba(4, 12, 35, .28); }
+    #hero-title, #biografia h2, #timeline-title, #stats-title, #gallery-title { animation: rise .8s both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(1.5rem); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes drift { from { transform: translate3d(-1rem, -1rem, 0) scale(1); } to { transform: translate3d(2rem, 1.5rem, 0) scale(1.15); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    /* Tailwind version: cinematic full-bleed story layout. */
+    header { background: transparent !important; }
+    #contenido > section:first-child { min-height: 100vh; position: relative; }
+    #contenido > section:first-child > .mx-auto { max-width: none; min-height: 100vh; display: block; }
+    #contenido > section:first-child .hero-image { position: absolute; inset: 0; min-height: 100vh; opacity: .82; }
+    #contenido > section:first-child .hero-image::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(25,53,47,.95), rgba(25,53,47,.45), rgba(25,53,47,.1)); }
+    #contenido > section:first-child .flex.min-h-\[38rem\] { position: relative; z-index: 1; min-height: 100vh; max-width: 80rem; margin: auto; align-items: center; }
+    #contenido > section:first-child .flex.min-h-\[38rem\] > div { max-width: 48rem; }
+    #biografia { background: #19352f; color: #f3f7ed; max-width: none; }
+    #biografia .text-slate-600 { color: rgba(243,247,237,.72); }
+    #biografia .text-ronaldo { color: #f2b84b; }
+    #trayectoria { background: #dcebd5; color: #19352f; }
+    #trayectoria .text-slate-300 { color: rgba(25,53,47,.7); }
+    #trayectoria .border-white\/25 { border-color: rgba(25,53,47,.25); }
+    #trayectoria .text-slate-400 { color: rgba(25,53,47,.62); }
+    #estadisticas { background: #f2b84b; max-width: none; }
+    #estadisticas .text-ronaldo { color: #19352f; }
+    #galeria { background: #f3f7ed; }
+    @media (min-width: 768px) { #trayectoria .mt-16 { grid-template-columns: 1fr; } #trayectoria .mt-16 > div:first-child { display: flex; flex-direction: column; border-right: 1px solid rgba(25,53,47,.25); } #trayectoria .mt-16 > div:first-child .timeline-step { border-left: 3px solid transparent; border-bottom: 0; } #trayectoria .mt-16 > div:first-child .timeline-step:hover, #trayectoria .mt-16 > div:first-child .timeline-step:focus-visible, #trayectoria .mt-16 > div:first-child .timeline-step.is-active { border-left-color: #f2b84b; border-bottom-color: transparent; } }
+    @media (max-width: 767px) { .hero-image { min-height: 22rem; } .hero-image::after { padding-top: 10rem; font-size: 11rem; } #contenido > section:first-child .flex.min-h-\[38rem\] { min-height: 100vh; } }
   </style>
 </head>
   <body class="overflow-x-hidden bg-paper text-ink">

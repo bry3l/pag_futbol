@@ -33,18 +33,85 @@
     .skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 10; }
     .skip-link:focus { top: 1rem; }
     :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
-    /* Bootstrap version: modular reading order with full-width hero bands. */
-    .hero .row { flex-direction: column; }
-    .hero .hero-image { min-height: 27rem; }
-    .timeline-section .row { display: flex; flex-direction: column; }
-    .timeline-section .col-md-4, .timeline-section .col-md-8 { width: 100%; }
-    .timeline-section .list-group { display: grid; grid-template-columns: repeat(4, 1fr); }
-    .timeline-step { border-left: 0; border-bottom: 3px solid transparent; }
-    .timeline-step:hover, .timeline-step:focus-visible, .timeline-step.is-active { border-left-color: transparent; border-bottom-color: var(--gold); }
-    .timeline-detail { margin-top: 1.5rem; }
-    @media (max-width: 767px) { .hero-image { min-height: 22rem; } .hero-image::after { padding-top: 10rem; font-size: 11rem; } .section-pad { padding: 4.5rem 0; } }
-    @media (max-width: 767px) { .container > .row { margin-left: 0; margin-right: 0; } }
-    @media (max-width: 575px) { .timeline-section .list-group { grid-template-columns: repeat(2, 1fr); } }
+    body { background: #101a35; }
+    main { overflow: hidden; }
+    .site-header { background: rgba(16, 26, 53, .78); backdrop-filter: blur(16px); }
+    .hero { position: relative; isolation: isolate; background: linear-gradient(135deg, #123b72 0%, #147d92 48%, #514982 100%); }
+    .hero::before, .hero::after { position: absolute; z-index: -1; border-radius: 50%; content: ''; filter: blur(8px); opacity: .35; pointer-events: none; }
+    .hero::before { width: 24rem; height: 24rem; top: -8rem; left: 12%; background: #ff8f70; animation: drift 10s ease-in-out infinite alternate; }
+    .hero::after { width: 30rem; height: 30rem; right: -8rem; bottom: -14rem; background: #5e5ac6; animation: drift 13s ease-in-out infinite alternate-reverse; }
+    .hero .container-fluid, .hero .row { position: relative; z-index: 1; }
+    .hero-image { box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
+    .hero .btn { box-shadow: 0 1rem 2rem rgba(4, 12, 35, .22); }
+    .section-pad { position: relative; }
+    .section-pad::after { position: absolute; width: 7rem; height: 7rem; right: 8%; top: 12%; border: 1px solid currentColor; border-radius: 50%; opacity: .12; content: ''; }
+    .stat, .gallery-img, .timeline-step { transition: transform .35s ease, box-shadow .35s ease, background-color .35s ease; }
+    .stat:hover { transform: translateY(-8px); box-shadow: 0 1rem 2rem rgba(4, 12, 35, .2); }
+    .timeline-step:hover, .timeline-step:focus-visible, .timeline-step.is-active { transform: translateX(8px); }
+    .gallery-img:hover { box-shadow: 0 1.25rem 2rem rgba(4, 12, 35, .28); }
+    .hero h1, .section-heading, #timeline-title, #stats-title, #gallery-title { animation: rise .8s both; }
+    .hero-description, .hero .btn { animation: rise .8s .12s both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(1.5rem); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes drift { from { transform: translate3d(-1rem, -1rem, 0) scale(1); } to { transform: translate3d(2rem, 1.5rem, 0) scale(1.15); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    /* Bootstrap version: compact dashboard-style editorial layout. */
+    .site-header { position: fixed !important; background: var(--ink); }
+    .hero .row { flex-direction: row; min-height: 44rem; }
+    .hero .hero-image { min-height: 44rem; order: 2; }
+    .hero .col-lg-6:first-child { order: 1; }
+    .hero .p-5 { padding: 4rem !important; }
+    .hero h1 { font-size: clamp(4.5rem, 8vw, 8rem); }
+    #biografia { border-bottom: 1px solid rgba(18, 52, 59, .16); }
+    #biografia .col-lg-5 { border-right: 1px solid rgba(18, 52, 59, .16); }
+    #estadisticas { background: var(--ink) !important; color: white; }
+    #estadisticas .text-red, #estadisticas .stat-number { color: var(--gold) !important; }
+    #estadisticas .stat { border-color: var(--gold); }
+    #estadisticas .text-secondary { color: rgba(255,255,255,.72) !important; }
+    #galeria figure:first-child { margin-top: 4rem; }
+    #galeria figure:nth-child(2) { margin-top: 1rem; }
+    .timeline-section .row { display: flex; flex-direction: row; }
+    .timeline-section .col-md-4 { width: 33.333%; }
+    .timeline-section .col-md-8 { width: 66.667%; }
+    .timeline-section .list-group { border-right: 1px solid rgba(255,255,255,.25); }
+    .timeline-step { border-left: 3px solid transparent; border-bottom: 0; }
+    .timeline-step:hover, .timeline-step:focus-visible, .timeline-step.is-active { border-left-color: var(--gold); border-bottom-color: transparent; }
+    .timeline-detail { margin-top: 0; padding-left: 2rem; }
+    @media (max-width: 767px) { .container > .row { margin-left: 0; margin-right: 0; } .hero .row { flex-direction: column; } .hero .hero-image { min-height: 25rem; order: 1; } .hero .col-lg-6:first-child { order: 2; } .hero .p-5 { padding: 3rem 1.5rem !important; } .timeline-section .row { flex-direction: column; } .timeline-section .col-md-4, .timeline-section .col-md-8 { width: 100%; } .timeline-section .list-group { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.25); } .timeline-detail { padding-left: 0; margin-top: 1.5rem; } #biografia .col-lg-5 { border-right: 0; border-bottom: 1px solid rgba(18, 52, 59, .16); padding-bottom: 2rem; } }
+    @media (max-width: 575px) { .timeline-section .list-group { display: grid; grid-template-columns: repeat(2, 1fr); } }
+    /* Poster treatment for the Bootstrap comparison page. */
+    body { background: #050608; color: #f7f0df; }
+    .site-header { background: linear-gradient(180deg, rgba(0,0,0,.72), transparent) !important; }
+    .hero { min-height: 100vh; background: #050608; }
+    .hero .row { position: relative; display: block; min-height: 100vh; }
+    .hero .hero-image { position: absolute; inset: 0; z-index: 0; min-height: 100vh; background-image: linear-gradient(180deg, rgba(0,0,0,.1) 22%, rgba(0,0,0,.18) 42%, rgba(0,0,0,.94) 92%), linear-gradient(90deg, rgba(0,0,0,.86), transparent 48%, rgba(0,0,0,.2)), url('https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg'); background-position: center; background-size: cover; filter: saturate(.78) contrast(1.18); }
+    .hero .hero-image::before, .hero .hero-image::after { position: absolute; content: ''; pointer-events: none; }
+    .hero .hero-image::before { inset: 20% 8% 12% 48%; border: 2px solid rgba(255,196,76,.72); border-left-color: transparent; border-radius: 48% 8% 52% 18%; transform: rotate(-12deg); filter: blur(.4px); box-shadow: 0 0 2rem rgba(255,145,53,.5); }
+    .hero .hero-image::after { width: 14rem; height: 14rem; right: 15%; top: 30%; border: 1px solid rgba(255,219,133,.68); border-radius: 50%; box-shadow: 0 0 2rem rgba(255,174,54,.45), inset 0 0 2rem rgba(255,174,54,.18); opacity: .75; }
+    .hero .col-lg-6:first-child { position: absolute; inset: 0; z-index: 1; display: flex; align-items: end; width: 100%; order: initial; pointer-events: none; }
+    .hero .col-lg-6:first-child > div { position: relative; width: 100%; max-width: 90rem !important; padding: 0 7vw 5rem !important; pointer-events: auto; }
+    .hero .col-lg-6:first-child > div::before { position: absolute; right: 8%; bottom: -1rem; color: rgba(255,255,255,.08); content: '7'; font: 700 28rem/.6 Impact, sans-serif; pointer-events: none; }
+    .hero h1 { position: relative; margin-bottom: 1rem !important; color: #fff; font-size: clamp(4.5rem, 12vw, 12rem); letter-spacing: .04em; text-shadow: .08em .08em 0 rgba(0,0,0,.45); }
+    .hero h1 .text-gold { color: #ffd166 !important; }
+    .hero .lead { position: relative; max-width: 27rem; color: rgba(255,255,255,.8); font-size: .95rem; }
+    .hero .small { position: relative; color: #ffd166; letter-spacing: .28em; }
+    .hero .btn { position: relative; border: 1px solid rgba(255,209,102,.8); background: transparent; color: #fff; }
+    .hero .btn:hover { background: #ffd166; color: #050608; }
+    #biografia, #estadisticas, #galeria { background: #050608 !important; color: #f7f0df; }
+    #biografia .text-secondary, #galeria .text-secondary, #estadisticas .text-secondary { color: rgba(247,240,223,.62) !important; }
+    #biografia .text-red, #estadisticas .text-red, #gallery-title .text-red { color: #ffd166 !important; }
+    #biografia .text-red { color: #ffd166 !important; }
+    #estadisticas .stat { background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.015)); border-color: #ffd166; }
+    #estadisticas .stat-number { color: #ffd166 !important; }
+    #galeria { border-top: 1px solid rgba(255,209,102,.18); }
+    #galeria .gallery-img { filter: grayscale(.35) contrast(1.15); }
+    #galeria .gallery-img:hover { filter: grayscale(0) contrast(1.1); }
+    .timeline-section { position: relative; background: #111216; }
+    .timeline-section::before { position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(255,174,54,.16), transparent 28%), linear-gradient(120deg, transparent 20%, rgba(255,209,102,.04) 20.2%, transparent 20.5%); content: ''; pointer-events: none; }
+    .timeline-section .container { position: relative; }
+    .timeline-section .text-gold, .timeline-section .timeline-step span { color: #ffd166 !important; }
+    .timeline-step:hover, .timeline-step:focus-visible, .timeline-step.is-active { background: rgba(255,209,102,.1); border-left-color: #ffd166; }
+    .site-footer { background: #050608 !important; border-top: 1px solid rgba(255,209,102,.25); }
+    @media (max-width: 767px) { .hero .hero-image { min-height: 100vh; } .hero .col-lg-6:first-child > div { padding: 0 1.5rem 3rem !important; } .hero h1 { font-size: clamp(3.8rem, 18vw, 6.5rem); } .hero .col-lg-6:first-child > div::before { right: -2rem; bottom: 1rem; font-size: 15rem; } .hero .hero-image::before { inset: 30% 2% 20% 28%; } .hero .hero-image::after { width: 8rem; height: 8rem; right: 9%; top: 34%; } }
   </style>
 </head>
 <body>
