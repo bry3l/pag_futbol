@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dashboard local de observabilidad del sitio Archivo Ronaldo.">
+  <title>Observabilidad local | Archivo Ronaldo</title>
+  <link rel="stylesheet" href="observabilidad.css">
+  <script src="observabilidad.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">CR7 / Herramienta local</p>
+      <h1>Observabilidad</h1>
+      <p class="intro">Métricas y eventos guardados únicamente en este navegador.</p>
+    </div>
+    <a class="back-link" href="../paginatristinokralde/index.html">Abrir sitio principal <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="contenido">
+    <section class="toolbar" aria-labelledby="acciones-title">
+      <h2 id="acciones-title">Acciones</h2>
+      <div class="actions">
+        <button type="button" id="refresh-button">Actualizar datos</button>
+        <button type="button" id="demo-button">Generar evento de demostración</button>
+        <button type="button" id="clear-button" class="button-secondary">Limpiar almacenamiento</button>
+        <button type="button" id="download-button" class="button-secondary">Descargar snapshot JSON</button>
+      </div>
+      <p id="dashboard-status" class="status" role="status" aria-live="polite">Dashboard listo.</p>
+    </section>
+
+    <section class="overview" aria-labelledby="overview-title">
+      <div class="section-title"><p class="eyebrow">Resumen</p><h2 id="overview-title">Estado actual</h2></div>
+      <div class="cards">
+        <article class="metric-card"><span>Eventos guardados</span><strong id="event-count">0</strong></article>
+        <article class="metric-card"><span>Viewport</span><strong id="viewport-value">-</strong></article>
+        <article class="metric-card"><span>Conexión</span><strong id="online-value">-</strong></article>
+        <article class="metric-card"><span>Carga</span><strong id="load-value">-</strong></article>
+      </div>
+    </section>
+
+    <div class="dashboard-grid">
+      <section class="panel" aria-labelledby="performance-title">
+        <div class="section-title"><p class="eyebrow">Performance API</p><h2 id="performance-title">Navegación y carga</h2></div>
+        <dl class="details-list" id="performance-details"></dl>
+      </section>
+      <section class="panel" aria-labelledby="support-title">
+        <div class="section-title"><p class="eyebrow">Entorno</p><h2 id="support-title">Soporte de APIs</h2></div>
+        <dl class="details-list" id="support-details"></dl>
+      </section>
+    </div>
+
+    <section class="panel events-panel" aria-labelledby="events-title">
+      <div class="section-title"><p class="eyebrow">Registro local</p><h2 id="events-title">Últimos eventos</h2></div>
+      <div class="table-wrap">
+        <table>
+          <caption class="sr-only">Eventos de observabilidad almacenados localmente</caption>
+          <thead><tr><th scope="col">Hora</th><th scope="col">Tipo</th><th scope="col">Detalle</th></tr></thead>
+          <tbody id="events-table"><tr><td colspan="3">No hay eventos todavía.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const api = window.CR7Observability;
+      const status = document.querySelector('#dashboard-status');
+      const formatNumber = (value) => typeof value === 'number' ? `${Math.round(value)} ms` : 'No disponible';
+      const formatDetail = (data) => Object.entries(data || {}).filter(([, value]) => value !== null && value !== undefined).map(([key, value]) => `${key}: ${String(value)}`).join(' · ') || 'Sin detalle';
+
+      function render() {
+        if (!api) { status.textContent = 'La API de observabilidad no está disponible.'; return; }
+        const snapshot = api.getSnapshot();
+        document.querySelector('#event-count').textContent = snapshot.events.length;
+        document.querySelector('#viewport-value').textContent = `${snapshot.viewport.width} × ${snapshot.viewport.height}`;
+        document.querySelector('#online-value').textContent = snapshot.online === null ? 'No disponible' : (snapshot.online ? 'En línea' : 'Sin conexión');
+        document.querySelector('#load-value').textContent = formatNumber(snapshot.navigation.loadEvent);
+        const performance = snapshot.navigation;
+        document.querySelector('#performance-details').innerHTML = [['DOM interactivo', formatNumber(performance.domInteractive)], ['DOMContentLoaded', formatNumber(performance.domContentLoaded)], ['Evento load', formatNumber(performance.loadEvent)], ['Duración entrada', formatNumber(performance.duration)]].map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join('');
+        document.querySelector('#support-details').innerHTML = Object.entries(snapshot.capabilities).map(([label, value]) => `<div><dt>${label}</dt><dd>${value ? 'Sí' : 'No'}</dd></div>`).join('');
+        const rows = snapshot.events.slice(-20).reverse().map((event) => `<tr><td>${new Date(event.timestamp).toLocaleTimeString('es-ES')}</td><td><strong>${event.type}</strong></td><td>${formatDetail(event.data)}</td></tr>`).join('');
+        document.querySelector('#events-table').innerHTML = rows || '<tr><td colspan="3">No hay eventos todavía.</td></tr>';
+      }
+
+      document.querySelector('#refresh-button').addEventListener('click', () => { render(); status.textContent = 'Datos actualizados.'; });
+      document.querySelector('#demo-button').addEventListener('click', () => { api.record('demo', { message: 'Evento generado desde el dashboard' }); render(); status.textContent = 'Evento de demostración guardado.'; });
+      document.querySelector('#clear-button').addEventListener('click', () => { api.clear(); render(); status.textContent = 'Almacenamiento local limpiado.'; });
+      document.querySelector('#download-button').addEventListener('click', () => { const blob = new Blob([JSON.stringify(api.getSnapshot(), null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = `cr7-observabilidad-${Date.now()}.json`; link.click(); URL.revokeObjectURL(url); status.textContent = 'Snapshot JSON descargado.'; });
+      render();
+    });
+  </script>
+</body>
+</html>

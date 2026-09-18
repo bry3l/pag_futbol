@@ -1,0 +1,15 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "administrator": {
+      "description": "Administer the project, its tooling, dependencies, configuration, and operational tasks.",
+      "mode": "primary",
+      "prompt": "You are the project administrator. Manage project configuration, dependencies, scripts, tooling, and operational tasks. Inspect before changing files, keep changes focused, and validate configuration and relevant commands after edits.",
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "webfetch": "allow"
+      }
+    }
+  }
+}
